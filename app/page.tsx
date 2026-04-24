@@ -1,13 +1,23 @@
+'use client'
+
 import InputBox from "./components/InputBox";
 import Messages from "./components/Messages";
 import Sidebar from "./components/Sidebar";
+import { useState } from "react";
 
-export default function Home() {
-  const messages = [
+  const staticMessages = [
     { text: "Hello! How can I assist you today?", isUser: false },
     { text: "Can you tell me a joke?", isUser: true },
     { text: "Sure! Why don't scientists trust atoms? Because they make up everything!", isUser: false },
   ];
+
+export default function Home() {
+  const [messages, setMessages] = useState(staticMessages)
+
+  const addMessage = (text: string, isUser: boolean) => {
+    setMessages(prev => [...prev, { text, isUser }])
+  }
+
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
@@ -19,7 +29,7 @@ export default function Home() {
 <Messages messages={messages}/>
 </div>
         {/* Input Box */}
-       <InputBox/>
+       <InputBox submit={(text) => addMessage(text, true)}/>
       </div>
     </div>
   );
