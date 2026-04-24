@@ -19,13 +19,13 @@ export default function Home() {
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
      <Sidebar />
 
       {/* Chat Area */}
       <div className="flex-1 flex flex-col bg-gray-100">
-        <div className="flex-1">
+        <div className="flex-1 overflow-hidden">
 <Messages messages={messages}/>
 </div>
         {/* Input Box */}
