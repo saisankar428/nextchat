@@ -5,17 +5,34 @@ import Messages from "./components/Messages";
 import Sidebar from "./components/Sidebar";
 import { useState } from "react";
 
-  const staticMessages = [
-    { text: "Hello! How can I assist you today?", isUser: false },
-    { text: "Can you tell me a joke?", isUser: true },
-    { text: "Sure! Why don't scientists trust atoms? Because they make up everything!", isUser: false },
-  ];
+const API_URL = 'http://127.0.0.1:8000/chat';
+const API_HEADERS = {
+  'Content-Type': 'application/json',
+};
 
 export default function Home() {
-  const [messages, setMessages] = useState(staticMessages)
+  const [messages, setMessages] = useState([
+    { text: "Hello! How can I assist you today?", isUser: false }
+  ]);
 
-  const addMessage = (text: string, isUser: boolean) => {
-    setMessages(prev => [...prev, { text, isUser }])
+  const addMessage = async (text: string, isUser: boolean) => {
+    const newMessages = [...messages, { text, isUser }];
+    setMessages(newMessages);
+
+    if (isUser) {
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: API_HEADERS,
+          body: JSON.stringify({ message: newMessages.map(m => m.text) })
+        });
+        const data = await response.json();
+        setMessages(prev => [...prev, { text: data.response, isUser: false }]);
+      } catch (error) {
+        console.error('Error fetching response:', error);
+        setMessages(prev => [...prev, { text: 'Sorry, something went wrong.', isUser: false }]);
+      }
+    }
   }
 
   return (
